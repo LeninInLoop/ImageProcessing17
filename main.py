@@ -30,7 +30,7 @@ class ImageUtils:
 class LBPUtils:
     @staticmethod
     def _is_uniform_pattern(binary_pattern: list) -> bool:
-        """Check if binary pattern is uniform (≤2 transitions)"""
+        """Check if the binary pattern is uniform (≤2 transitions)"""
         transitions = 0
         for i in range(8):
             if binary_pattern[i] != binary_pattern[(i + 1) % 8]:
@@ -48,8 +48,11 @@ class LBPUtils:
         return ones_count
 
     @staticmethod
-    def calculate_lbp(image: np.ndarray, rotation_invariant_lbp: bool = False,
-                      uniform_patterns: bool = False) -> np.ndarray:
+    def calculate_lbp(
+            image: np.ndarray,
+            rotation_invariant_lbp: bool = False,
+            uniform_patterns: bool = False
+    ) -> np.ndarray:
         """
         Simple Local Binary Pattern implementation
         """
@@ -73,7 +76,7 @@ class LBPUtils:
                     image[i, j - 1]  # left
                 ]
 
-                # Create binary pattern
+                # Create a binary pattern
                 binary_pattern = []
                 for neighbor in neighbors:
                     if neighbor >= center:
@@ -84,14 +87,17 @@ class LBPUtils:
                 # Calculate LBP value based on method
                 if uniform_patterns:
                     lbp_value = LBPUtils._get_uniform_pattern_id(binary_pattern)
+
                 elif rotation_invariant_lbp:
                     min_value = float('inf')
+
                     for rotation in range(8):
                         current_value = 0
                         for k in range(8):
                             current_value += binary_pattern[(k + rotation) % 8] * (2 ** k)
                         min_value = min(min_value, current_value)
                     lbp_value = min_value
+
                 else:
                     lbp_value = 0
                     for k in range(8):
